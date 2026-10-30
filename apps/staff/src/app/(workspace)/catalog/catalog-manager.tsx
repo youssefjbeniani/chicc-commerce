@@ -77,7 +77,7 @@ function localized(value: LocalizedText, locale: Locale): string {
 
 function priceInputValue(amountMinor: string | number, currencyCode: string): string {
   try {
-    const digits = new Intl.NumberFormat("en", { style: "currency", currency: currencyCode }).resolvedOptions().maximumFractionDigits;
+    const digits = new Intl.NumberFormat("en", { style: "currency", currency: currencyCode }).resolvedOptions().maximumFractionDigits ?? 2;
     const amount = BigInt(amountMinor);
     const scale = 10n ** BigInt(digits);
     const whole = amount / scale;
