@@ -50,7 +50,7 @@ function formatTotal(amount: string | number, currency: string, locale: Locale) 
   if (!Number.isSafeInteger(value)) return "";
   try {
     const formatter = new Intl.NumberFormat(locale, { style: "currency", currency });
-    const digits = formatter.resolvedOptions().maximumFractionDigits;
+    const digits = formatter.resolvedOptions().maximumFractionDigits ?? 2;
     return formatter.format(value / 10 ** digits);
   } catch { return ""; }
 }
