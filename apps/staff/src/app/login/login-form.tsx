@@ -2,7 +2,7 @@
 
 import type { Locale } from "@chicc/types";
 import { useActionState, useEffect, useState } from "react";
-import { signIn, type LoginError } from "./actions";
+import { signIn, type LoginError } from "../actions";
 
 const copy: Record<Locale, {
   label: string; title: string; subtitle: string; email: string; password: string;
@@ -83,4 +83,3 @@ export function LoginForm({ initialError }: { initialError: string | null }) {
     </main>
   );
 }
-
