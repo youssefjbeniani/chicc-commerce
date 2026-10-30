@@ -32,7 +32,7 @@ export function formatMinorAmount(amountMinor: string | number, currencyCode: st
   if (!Number.isSafeInteger(amount) || amount < 0) return "";
   try {
     const formatter = new Intl.NumberFormat(locale, { style: "currency", currency: currencyCode });
-    const fractionDigits = formatter.resolvedOptions().maximumFractionDigits;
+    const fractionDigits = formatter.resolvedOptions().maximumFractionDigits ?? 2;
     return formatter.format(amount / 10 ** fractionDigits);
   } catch {
     return "";
