@@ -25,7 +25,7 @@ function canManageCatalog(role: string): boolean {
 function toMinorUnits(priceMajor: string, currencyCode: string): number | null {
   try {
     const formatter = new Intl.NumberFormat("en", { style: "currency", currency: currencyCode });
-    const fractionDigits = formatter.resolvedOptions().maximumFractionDigits;
+    const fractionDigits = formatter.resolvedOptions().maximumFractionDigits ?? 2;
     const [wholePart, fractionPart = ""] = priceMajor.split(".");
     let normalizedFraction = fractionPart;
     while (normalizedFraction.length > fractionDigits && normalizedFraction.endsWith("0")) {
