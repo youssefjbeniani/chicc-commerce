@@ -1,0 +1,18 @@
+{
+  "name": "chicc-commerce",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CHICC customer storefront and private staff dashboard monorepo",
+  "packageManager": "npm@10.8.2",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:storefront": "npm run dev --workspace=@chicc/storefront",
+    "dev:staff": "npm run dev --workspace=@chicc/staff",
+    "build:storefront": "npm run build --workspace=@chicc/storefront",
+    "build:staff": "npm run build --workspace=@chicc/staff",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
