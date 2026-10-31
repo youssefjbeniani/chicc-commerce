@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { requireInternalUser } from "@/lib/require-internal-user";
 import { createClient } from "@/lib/supabase/server";
 
-export type CatalogActionState = "saved" | "invalid" | "slug_taken" | "not_authorized" | "save_failed" | null;
+export type CatalogActionState = "saved" | "invalid" | "image_invalid" | "image_failed" | "slug_taken" | "not_authorized" | "save_failed" | null;
 
 type StockQuantityInput = { valid: true; value: number | null } | { valid: false };
 function parseStockQuantity(value: FormDataEntryValue | null): StockQuantityInput {
@@ -94,8 +94,28 @@ export async function createProduct(_previous: CatalogActionState, formData: For
   const priceMinor = toMinorUnits(parsed.data.priceMajor, parsed.data.currencyCode);
   if (priceMinor === null) return "invalid";
 
+  const imageEntry = formData.get("image");
+  const imageFile = imageEntry instanceof File && imageEntry.size > 0 ? imageEntry : null;
+  if (typeof imageEntry === "string" && imageEntry) return "image_invalid";
+  const imageExtension = imageFile ? await detectProductImageExtension(imageFile) : null;
+  if (imageFile && !imageExtension) return "image_invalid";
+
   const supabase = await createClient();
+  const productId = crypto.randomUUID();
+  let imagePath: string | null = null;
+  if (imageFile && imageExtension) {
+    imagePath = `${productId}/${crypto.randomUUID()}.${imageExtension}`;
+    const { error: uploadError } = await supabase.storage.from(productImageBucket).upload(imagePath, imageFile, {
+      contentType: imageFile.type,
+      cacheControl: "31536000",
+      upsert: false,
+    });
+    if (uploadError) return "image_failed";
+  }
+
   const { error } = await supabase.from("products").insert({
+    id: productId,
+    image_path: imagePath,
     slug: parsed.data.slug,
     sku: parsed.data.sku || null,
     category_id: parsed.data.categoryId,
@@ -106,7 +126,10 @@ export async function createProduct(_previous: CatalogActionState, formData: For
     stock_quantity: parsed.data.stockQuantity,
     is_published: parsed.data.isPublished,
   });
-  if (error) return error.code === "23505" ? "slug_taken" : "save_failed";
+  if (error) {
+    if (imagePath) await supabase.storage.from(productImageBucket).remove([imagePath]);
+    return error.code === "23505" ? "slug_taken" : "save_failed";
+  }
 
   revalidatePath("/catalog");
   revalidatePath("/");

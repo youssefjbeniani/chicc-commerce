@@ -28,11 +28,11 @@ const stockCopy: Record<Locale, StockCopy> = {
   ar: { quantity: "المخزون المتاح", hint: "اتركه فارغاً لعدم تتبع المخزون. تحجز الطلبات الوحدات وتعيدها الإلغاءات.", untracked: "المخزون غير متتبع", available: "متاح" },
   en: { quantity: "Available stock", hint: "Leave blank to skip tracking. Orders reserve units; cancellations return them.", untracked: "Stock not tracked", available: "Available" },
 };
-type ImageCopy = { label: string; hint: string; remove: string; invalid: string; cleanupPending: string };
+type ImageCopy = { label: string; hint: string; remove: string; invalid: string; failed: string; cleanupPending: string };
 const imageCopy: Record<Locale, ImageCopy> = {
-  fr: { label: "Image du produit", hint: "JPEG, PNG ou WebP · 5 Mo maximum.", remove: "Retirer image actuelle", invalid: "Utilisez un fichier JPEG, PNG ou WebP de 5 Mo maximum.", cleanupPending: "Catalogue enregistré, mais un ancien fichier image doit être nettoyé dans Supabase Storage." },
-  ar: { label: "صورة المنتج", hint: "JPEG أو PNG أو WebP · بحد أقصى 5 ميغابايت.", remove: "إزالة الصورة الحالية", invalid: "استخدم صورة JPEG أو PNG أو WebP لا يتجاوز حجمها 5 ميغابايت.", cleanupPending: "تم حفظ الكتالوج، لكن يلزم تنظيف صورة قديمة في Supabase Storage." },
-  en: { label: "Product image", hint: "JPEG, PNG, or WebP · maximum 5 MB.", remove: "Remove current image", invalid: "Choose a JPEG, PNG, or WebP image no larger than 5 MB.", cleanupPending: "Catalog saved, but an old image file needs cleanup in Supabase Storage." },
+  fr: { label: "Image du produit", hint: "JPEG, PNG ou WebP · 5 Mo maximum.", remove: "Retirer image actuelle", invalid: "Utilisez un fichier JPEG, PNG ou WebP de 5 Mo maximum.", failed: "L’image n’a pas pu être téléversée. Réessayez.", cleanupPending: "Catalogue enregistré, mais un ancien fichier image doit être nettoyé dans Supabase Storage." },
+  ar: { label: "صورة المنتج", hint: "JPEG أو PNG أو WebP · بحد أقصى 5 ميغابايت.", remove: "إزالة الصورة الحالية", invalid: "استخدم صورة JPEG أو PNG أو WebP لا يتجاوز حجمها 5 ميغابايت.", failed: "تعذر رفع الصورة. حاول مرة أخرى.", cleanupPending: "تم حفظ الكتالوج، لكن يلزم تنظيف صورة قديمة في Supabase Storage." },
+  en: { label: "Product image", hint: "JPEG, PNG, or WebP · maximum 5 MB.", remove: "Remove current image", invalid: "Choose a JPEG, PNG, or WebP image no larger than 5 MB.", failed: "The image could not be uploaded. Please try again.", cleanupPending: "Catalog saved, but an old image file needs cleanup in Supabase Storage." },
 };
 
 const copy: Record<Locale, Copy> = {
@@ -91,9 +91,11 @@ function confirmDeletion(event: FormEvent<HTMLFormElement>, prompt: string) {
   if (!window.confirm(prompt)) event.preventDefault();
 }
 
-function resultMessage(state: CatalogActionState, text: Copy): string {
+function resultMessage(state: CatalogActionState, text: Copy, imageText: ImageCopy): string {
   if (state === "saved") return text.saved;
   if (state === "invalid") return text.invalid;
+  if (state === "image_invalid") return imageText.invalid;
+  if (state === "image_failed") return imageText.failed;
   if (state === "slug_taken") return text.slugTaken;
   if (state === "not_authorized") return text.denied;
   if (state === "save_failed") return text.failed;
@@ -146,7 +148,7 @@ export function CatalogManager({ categories, products, catalogReady, canDelete, 
             <label><span>{text.nameAr}</span><input name="name_ar" required maxLength={120} dir="rtl" /></label>
             <label><span>{text.nameEn}</span><input name="name_en" required maxLength={120} /></label>
             <label className="checkbox-row"><input name="is_published" type="checkbox" /><span>{text.published}</span></label>
-            {categoryState && <p className={categoryState === "saved" ? "success-message" : "form-message"} role="status">{resultMessage(categoryState, text)}</p>}
+            {categoryState && <p className={categoryState === "saved" ? "success-message" : "form-message"} role="status">{resultMessage(categoryState, text, imageText)}</p>}
             <button className="primary-button" disabled={!catalogReady || categoryPending}>{categoryPending ? text.saving : text.save}</button>
           </form>
           {canDelete && <p className="catalog-delete-hint">{text.deleteCategoryHint}</p>}
@@ -181,6 +183,7 @@ export function CatalogManager({ categories, products, catalogReady, canDelete, 
             <label><span>{text.slug}</span><input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxLength={120} /></label>
             <label><span>{text.category}</span><select name="category_id" defaultValue=""><option value="">{text.noCategory}</option>{categories.map((category) => <option key={category.id} value={category.id}>{localized(category.name_i18n, locale)}</option>)}</select></label>
             <label><span>{text.sku}</span><input name="sku" maxLength={80} /></label>
+            <label><span>{imageText.label}</span><input name="image" type="file" accept="image/jpeg,image/png,image/webp" /><small>{imageText.hint}</small></label>
             <label><span>{text.nameFr}</span><input name="name_fr" required maxLength={120} /></label>
             <label><span>{text.nameAr}</span><input name="name_ar" required maxLength={120} dir="rtl" /></label>
             <label><span>{text.nameEn}</span><input name="name_en" required maxLength={120} /></label>
@@ -191,7 +194,7 @@ export function CatalogManager({ categories, products, catalogReady, canDelete, 
             <label><span>{text.currency}</span><input name="currency_code" required pattern="[A-Za-z]{3}" minLength={3} maxLength={3} placeholder="EUR" /></label>
             <label><span>{stockText.quantity}</span><input name="stock_quantity" type="number" min={0} step={1} max={Number.MAX_SAFE_INTEGER} /><small>{stockText.hint}</small></label>
             <label className="checkbox-row"><input name="is_published" type="checkbox" /><span>{text.published}</span></label>
-            {productState && <p className={productState === "saved" ? "success-message" : "form-message"} role="status">{resultMessage(productState, text)}</p>}
+            {productState && <p className={productState === "saved" ? "success-message" : "form-message"} role="status">{resultMessage(productState, text, imageText)}</p>}
             <button className="primary-button" disabled={!catalogReady || productPending}>{productPending ? text.saving : text.save}</button>
           </form>
           <div className="catalog-list">
