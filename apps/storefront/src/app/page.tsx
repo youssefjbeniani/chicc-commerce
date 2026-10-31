@@ -11,7 +11,7 @@ export const metadata = {
 
 type Category = { id: string; name_i18n: LocalizedText };
 type CatalogProduct = {
-  id: string; category_id: string | null; name_i18n: LocalizedText;
+  id: string; slug: string; category_id: string | null; name_i18n: LocalizedText;
   description_i18n: Partial<LocalizedText> | null; image_url: string | null; is_in_stock: boolean; price_minor: string | number; currency_code: string;
 };
 
@@ -20,7 +20,7 @@ export default async function HomePage() {
 
   const supabase = createClient();
   const [productResult, categoryResult] = await Promise.all([
-    supabase.from("products").select("id, category_id, name_i18n, description_i18n, image_path, is_in_stock, price_minor, currency_code").eq("is_published", true).order("sort_order").order("slug"),
+    supabase.from("products").select("id, slug, category_id, name_i18n, description_i18n, image_path, is_in_stock, price_minor, currency_code").eq("is_published", true).order("sort_order").order("slug"),
     supabase.from("catalog_categories").select("id, name_i18n").eq("is_published", true).order("sort_order").order("slug"),
   ]);
   const catalogReady = !productResult.error && !categoryResult.error;
