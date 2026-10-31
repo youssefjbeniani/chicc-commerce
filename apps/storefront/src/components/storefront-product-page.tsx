@@ -51,7 +51,7 @@ export function StorefrontProductPage({product}:{product:Product}){
     <p className="product-order-total"><span>{text.total}</span><strong>{formatMinorAmount(total,product.currency_code,locale)}</strong></p>
     <label><span>{text.customerName}</span><input name="customer_name" required maxLength={120} autoComplete="name"/></label><label><span>{text.phone}</span><input name="customer_phone" required type="tel" maxLength={40} autoComplete="tel"/></label>
     <label><span>{text.street}</span><input name="street" required maxLength={300} autoComplete="street-address"/></label>
-    <label><span>{text.region}</span><select name="region" required defaultValue=""><option value="">{text.chooseRegion}</option>{governorates.map(region=><option key={region.code} value={region.code}>{region[locale]}</option>)}</select></label>
+    <label><span>{text.region}</span><select name="region" required defaultValue=""><option value="">{text.chooseRegion}</option>{governorates.map(region=><option key={region.code} value={region.fr}>{region[locale]}</option>)}</select></label>
     <label className="order-honeypot" aria-hidden="true"><span>{text.company}</span><input name="company_website" tabIndex={-1} autoComplete="off"/></label>
     {orderState&&<p className={orderState==="success"?"success-message":"form-message"} role={orderState==="success"?"status":"alert"}>{orderState==="success"?text.success:text.failure}</p>}
     <button className="primary-button" type="submit" disabled={pending}>{pending?text.submitting:text.placeOrder}</button>
