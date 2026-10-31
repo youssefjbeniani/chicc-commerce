@@ -5,6 +5,10 @@ import { redirect } from "next/navigation";
 import { requireInternalUser } from "@/lib/require-internal-user";
 import { createClient } from "@/lib/supabase/server";
 
+function canManageOrders(role: string): boolean {
+  return role === "staff" || role === "manager";
+}
+
 export async function assignDeliveryWorker(formData: FormData): Promise<void> {
   const user = await requireInternalUser();
   if (!canManageOrders(user.role)) redirect("/orders?notice=not_authorized");
