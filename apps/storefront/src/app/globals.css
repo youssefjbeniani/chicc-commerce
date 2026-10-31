@@ -137,3 +137,6 @@ a.product-card { display: block; color: inherit; text-decoration: none; }
 .product-order-total strong { font-size: 1.05rem; }
 @media (max-width: 800px) { .product-detail-grid { grid-template-columns: 1fr; gap: 24px; } .product-detail-image { aspect-ratio: 4 / 3.7; } .product-detail-copy { padding-top: 0; } }
 @media (max-width: 620px) { .product-order-card .order-request-form { grid-template-columns: 1fr; } .product-order-card .order-request-form label:nth-of-type(n), .product-order-card .order-request-form .primary-button, .product-order-card .order-request-form .form-message, .product-order-card .order-request-form .success-message, .product-order-total { grid-column: 1; } }
+
+.order-request-form select { width:100%; min-height:46px; border:1px solid var(--line); border-radius:10px; background:white; color:var(--ink); font:inherit; font-weight:400; padding:11px 13px; }
+.order-request-form select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgb(117 92 67 / 10%); outline:none; }
