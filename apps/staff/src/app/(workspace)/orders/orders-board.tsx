@@ -4,9 +4,7 @@ import type { InternalAccountRole, Locale, LocalizedText, OrderChannel, OrderSta
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { assignDeliveryWorker, transitionOrderStatus } from "./actions";
-import { ManualWhatsAppOrderForm } from "./manual-whatsapp-order-form";
 
-type ProductChoice = { id: string; name_i18n: LocalizedText; sku: string | null; currency_code: string; stock_quantity: number | string | null };
 type Worker = { id: string; display_name: string | null };
 type Item = { id: string; product_name_i18n: LocalizedText; quantity: number; unit_price_minor: string | number; line_total_minor: string | number };
 type Order = {
@@ -60,9 +58,9 @@ function deliveryAddress(address: Record<string, string>) {
 }
 
 export function OrdersBoard({
-  orders, products, workers, role, loadError, notice,
+  orders, workers, role, loadError, notice,
 }: {
-  orders: Order[]; products: ProductChoice[]; workers: Worker[]; role: InternalAccountRole; loadError: boolean; notice: string | null;
+  orders: Order[]; workers: Worker[]; role: InternalAccountRole; loadError: boolean; notice: string | null;
 }) {
   const [locale, setLocale] = useState<Locale>("fr");
   const text = copy[locale];
@@ -128,7 +126,6 @@ export function OrdersBoard({
           );
         })}
       </section>
-      {canManage && !loadError && <ManualWhatsAppOrderForm products={products} locale={locale} />}
     </main>
   );
 }
