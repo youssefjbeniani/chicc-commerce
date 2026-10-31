@@ -6,11 +6,26 @@ import { type FormEvent,useEffect,useState } from "react";
 import { createBrowserClient } from "@/lib/supabase/browser";
 type Product={id:string;slug:string;name_i18n:LocalizedText;description_i18n:Partial<LocalizedText>|null;image_url:string|null;is_in_stock:boolean;price_minor:string|number;currency_code:string};
 type OrderState="success"|"unavailable"|null;
-const copy:Record<Locale,{brand:string;language:string;back:string;quantity:string;unavailable:string;orderTitle:string;orderIntro:string;customerName:string;phone:string;street:string;city:string;region:string;postalCode:string;country:string;notes:string;company:string;placeOrder:string;submitting:string;success:string;failure:string;total:string}>={
- fr:{brand:"CHICC",language:"Langue",back:"Retour à la sélection",quantity:"Quantité",unavailable:"Ce produit est actuellement épuisé.",orderTitle:"Finaliser votre demande",orderIntro:"L’équipe CHICC vous contactera pour confirmer la commande et la livraison.",customerName:"Nom complet",phone:"Téléphone",street:"Adresse",city:"Ville",region:"Région (facultatif)",postalCode:"Code postal (facultatif)",country:"Pays (facultatif)",notes:"Instructions de livraison (facultatif)",company:"Société",placeOrder:"Envoyer la demande",submitting:"Envoi…",success:"Votre demande est reçue. L’équipe CHICC vous contactera pour confirmer la livraison.",failure:"Impossible d’envoyer la demande. Le stock a peut-être changé; réessayez.",total:"Total estimé"},
- ar:{brand:"CHICC",language:"اللغة",back:"العودة إلى التشكيلة",quantity:"الكمية",unavailable:"هذا المنتج غير متوفر حالياً.",orderTitle:"إتمام طلبك",orderIntro:"سيتواصل معك فريق CHICC لتأكيد الطلب والتوصيل.",customerName:"الاسم الكامل",phone:"الهاتف",street:"العنوان",city:"المدينة",region:"المنطقة (اختياري)",postalCode:"الرمز البريدي (اختياري)",country:"الدولة (اختياري)",notes:"تعليمات التوصيل (اختياري)",company:"الشركة",placeOrder:"إرسال الطلب",submitting:"جارٍ الإرسال…",success:"تم استلام طلبك. سيتواصل معك فريق CHICC لتأكيد التوصيل.",failure:"تعذر إرسال الطلب. ربما تغير المخزون؛ حاول مجدداً.",total:"الإجمالي التقديري"},
- en:{brand:"CHICC",language:"Language",back:"Back to collection",quantity:"Quantity",unavailable:"This product is currently out of stock.",orderTitle:"Complete your order",orderIntro:"The CHICC team will contact you to confirm your order and delivery.",customerName:"Full name",phone:"Phone number",street:"Street address",city:"City",region:"Region (optional)",postalCode:"Postal code (optional)",country:"Country (optional)",notes:"Delivery instructions (optional)",company:"Company",placeOrder:"Send order request",submitting:"Sending…",success:"Your request was received. The CHICC team will contact you to confirm delivery.",failure:"Could not send the request. Stock may have changed; please try again.",total:"Estimated total"}
+const copy:Record<Locale,{brand:string;language:string;back:string;quantity:string;unavailable:string;orderTitle:string;orderIntro:string;customerName:string;phone:string;street:string;region:string;chooseRegion:string;company:string;placeOrder:string;submitting:string;success:string;failure:string;total:string}>={
+ fr:{brand:"CHICC",language:"Langue",back:"Retour à la sélection",quantity:"Quantité",unavailable:"Ce produit est actuellement épuisé.",orderTitle:"Finaliser votre demande",orderIntro:"L’équipe CHICC vous contactera pour confirmer la commande et la livraison.",customerName:"Nom complet",phone:"Téléphone",street:"Adresse",region:"Gouvernorat",chooseRegion:"Sélectionner un gouvernorat",company:"Société",placeOrder:"Envoyer la demande",submitting:"Envoi…",success:"Votre demande est reçue. L’équipe CHICC vous contactera pour confirmer la livraison.",failure:"Impossible d’envoyer la demande. Le stock a peut-être changé; réessayez.",total:"Total estimé"},
+ ar:{brand:"CHICC",language:"اللغة",back:"العودة إلى التشكيلة",quantity:"الكمية",unavailable:"هذا المنتج غير متوفر حالياً.",orderTitle:"إتمام طلبك",orderIntro:"سيتواصل معك فريق CHICC لتأكيد الطلب والتوصيل.",customerName:"الاسم الكامل",phone:"الهاتف",street:"العنوان",region:"الولاية",chooseRegion:"اختر ولاية",company:"الشركة",placeOrder:"إرسال الطلب",submitting:"جارٍ الإرسال…",success:"تم استلام طلبك. سيتواصل معك فريق CHICC لتأكيد التوصيل.",failure:"تعذر إرسال الطلب. ربما تغير المخزون؛ حاول مجدداً.",total:"الإجمالي التقديري"},
+ en:{brand:"CHICC",language:"Language",back:"Back to collection",quantity:"Quantity",unavailable:"This product is currently out of stock.",orderTitle:"Complete your order",orderIntro:"The CHICC team will contact you to confirm your order and delivery.",customerName:"Full name",phone:"Phone number",street:"Street address",region:"Governorate",chooseRegion:"Choose a governorate",company:"Company",placeOrder:"Send order request",submitting:"Sending…",success:"Your request was received. The CHICC team will contact you to confirm delivery.",failure:"Could not send the request. Stock may have changed; please try again.",total:"Estimated total"}
 };
+type TunisianGovernorate={code:string;fr:string;ar:string;en:string};
+const governorates:TunisianGovernorate[]=[
+ {code:"ariana",fr:"Ariana",ar:"أريانة",en:"Ariana"},{code:"beja",fr:"Béja",ar:"باجة",en:"Beja"},
+ {code:"ben_arous",fr:"Ben Arous",ar:"بن عروس",en:"Ben Arous"},{code:"bizerte",fr:"Bizerte",ar:"بنزرت",en:"Bizerte"},
+ {code:"gabes",fr:"Gabès",ar:"قابس",en:"Gabes"},{code:"gafsa",fr:"Gafsa",ar:"قفصة",en:"Gafsa"},
+ {code:"jendouba",fr:"Jendouba",ar:"جندوبة",en:"Jendouba"},{code:"kairouan",fr:"Kairouan",ar:"القيروان",en:"Kairouan"},
+ {code:"kasserine",fr:"Kasserine",ar:"القصرين",en:"Kasserine"},{code:"kebili",fr:"Kébili",ar:"قبلي",en:"Kebili"},
+ {code:"kef",fr:"Le Kef",ar:"الكاف",en:"Kef"},{code:"mahdia",fr:"Mahdia",ar:"المهدية",en:"Mahdia"},
+ {code:"manouba",fr:"Manouba",ar:"منوبة",en:"Manouba"},{code:"medenine",fr:"Médenine",ar:"مدنين",en:"Medenine"},
+ {code:"monastir",fr:"Monastir",ar:"المنستير",en:"Monastir"},{code:"nabeul",fr:"Nabeul",ar:"نابل",en:"Nabeul"},
+ {code:"sfax",fr:"Sfax",ar:"صفاقس",en:"Sfax"},{code:"sidi_bouzid",fr:"Sidi Bouzid",ar:"سيدي بوزيد",en:"Sidi Bouzid"},
+ {code:"siliana",fr:"Siliana",ar:"سليانة",en:"Siliana"},{code:"sousse",fr:"Sousse",ar:"سوسة",en:"Sousse"},
+ {code:"tataouine",fr:"Tataouine",ar:"تطاوين",en:"Tataouine"},{code:"tozeur",fr:"Tozeur",ar:"توزر",en:"Tozeur"},
+ {code:"tunis",fr:"Tunis",ar:"تونس",en:"Tunis"},{code:"zaghouan",fr:"Zaghouan",ar:"زغوان",en:"Zaghouan"},
+];
 function localized(t:Partial<LocalizedText>|null|undefined,l:Locale){return t?.[l]||t?.fr||t?.en||""}
 export function StorefrontProductPage({product}:{product:Product}){
  const [locale,setLocale]=useState<Locale>("fr"),[quantity,setQuantity]=useState(1),[pending,setPending]=useState(false),[orderState,setOrderState]=useState<OrderState>(null),text=copy[locale];
@@ -19,8 +34,8 @@ export function StorefrontProductPage({product}:{product:Product}){
   event.preventDefault();const formElement=event.currentTarget;setOrderState(null);if(!formElement.reportValidity())return;setPending(true);
   try{const form=new FormData(formElement);const supabase=createBrowserClient();const {error}=await supabase.functions.invoke("place-website-order",{body:{
    customer_name:form.get("customer_name"),customer_phone:form.get("customer_phone"),
-   delivery_address:{street:form.get("street"),city:form.get("city"),region:form.get("region"),postal_code:form.get("postal_code"),country:form.get("country")},
-   delivery_notes:form.get("delivery_notes"),company_website:form.get("company_website"),items:[{product_id:product.id,quantity}]
+   delivery_address:{street:form.get("street"),city:form.get("region")},
+   company_website:form.get("company_website"),items:[{product_id:product.id,quantity}]
   }});
   if(error){setOrderState("unavailable");return}setOrderState("success");formElement.reset();setQuantity(1);
   }catch{setOrderState("unavailable")}finally{setPending(false)}
@@ -35,9 +50,8 @@ export function StorefrontProductPage({product}:{product:Product}){
     <label><span>{text.quantity}</span><input name="quantity" type="number" min={1} max={25} step={1} required value={quantity} onChange={e=>setQuantity(Math.min(25,Math.max(1,Number(e.target.value)||1)))}/></label>
     <p className="product-order-total"><span>{text.total}</span><strong>{formatMinorAmount(total,product.currency_code,locale)}</strong></p>
     <label><span>{text.customerName}</span><input name="customer_name" required maxLength={120} autoComplete="name"/></label><label><span>{text.phone}</span><input name="customer_phone" required type="tel" maxLength={40} autoComplete="tel"/></label>
-    <label><span>{text.street}</span><input name="street" required maxLength={300} autoComplete="street-address"/></label><label><span>{text.city}</span><input name="city" required maxLength={120} autoComplete="address-level2"/></label>
-    <label><span>{text.region}</span><input name="region" maxLength={120} autoComplete="address-level1"/></label><label><span>{text.postalCode}</span><input name="postal_code" maxLength={40} autoComplete="postal-code"/></label>
-    <label><span>{text.country}</span><input name="country" maxLength={100} autoComplete="country-name"/></label><label><span>{text.notes}</span><textarea name="delivery_notes" maxLength={2000} rows={3}/></label>
+    <label><span>{text.street}</span><input name="street" required maxLength={300} autoComplete="street-address"/></label>
+    <label><span>{text.region}</span><select name="region" required defaultValue=""><option value="">{text.chooseRegion}</option>{governorates.map(region=><option key={region.code} value={region.code}>{region[locale]}</option>)}</select></label>
     <label className="order-honeypot" aria-hidden="true"><span>{text.company}</span><input name="company_website" tabIndex={-1} autoComplete="off"/></label>
     {orderState&&<p className={orderState==="success"?"success-message":"form-message"} role={orderState==="success"?"status":"alert"}>{orderState==="success"?text.success:text.failure}</p>}
     <button className="primary-button" type="submit" disabled={pending}>{pending?text.submitting:text.placeOrder}</button>
