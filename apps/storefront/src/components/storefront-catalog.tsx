@@ -24,18 +24,19 @@ const copy: Record<Locale, {
   phone: string; street: string; city: string; region: string; postalCode: string; country: string;
   notes: string; placeOrder: string; submitting: string; orderSuccess: string; orderInvalid: string;
   mixedCurrency: string; orderUnavailable: string; chooseProduct: string; cart: string; company: string; outOfStock: string;
+  explore: string; collectionLabel: string;
 }> = {
   fr: {
     brand: "CHICC", title: "La sélection", intro: "Découvrez la collection CHICC.", language: "Langue", empty: "Les produits seront bientôt disponibles.", setup: "Le catalogue Supabase doit être configuré avant de publier les produits.",
-    categories: "Catégories", all: "Tout voir", quantity: "Quantité", orderTitle: "Votre demande", customerName: "Nom complet", phone: "Téléphone", street: "Adresse", city: "Ville", region: "Région (facultatif)", postalCode: "Code postal (facultatif)", country: "Pays (facultatif)", notes: "Instructions de livraison (facultatif)", placeOrder: "Envoyer la demande", submitting: "Envoi…", orderSuccess: "Votre demande est reçue. L’équipe CHICC vous contactera pour confirmer la livraison.", orderInvalid: "Vérifiez vos coordonnées et l’adresse de livraison.", mixedCurrency: "Choisissez des articles dans une seule devise par commande.", orderUnavailable: "Le stock a peut-être changé. Actualisez le catalogue puis réessayez.", chooseProduct: "Choisissez au moins un article avant d’envoyer.", cart: "Articles sélectionnés", company: "Société", outOfStock: "Épuisé",
+    categories: "Catégories", all: "Tout voir", quantity: "Quantité", orderTitle: "Votre demande", customerName: "Nom complet", phone: "Téléphone", street: "Adresse", city: "Ville", region: "Région (facultatif)", postalCode: "Code postal (facultatif)", country: "Pays (facultatif)", notes: "Instructions de livraison (facultatif)", placeOrder: "Envoyer la demande", submitting: "Envoi…", orderSuccess: "Votre demande est reçue. L’équipe CHICC vous contactera pour confirmer la livraison.", orderInvalid: "Vérifiez vos coordonnées et l’adresse de livraison.", mixedCurrency: "Choisissez des articles dans une seule devise par commande.", orderUnavailable: "Le stock a peut-être changé. Actualisez le catalogue puis réessayez.", chooseProduct: "Choisissez au moins un article avant d’envoyer.", cart: "Articles sélectionnés", company: "Société", outOfStock: "Épuisé", explore: "Explorer la sélection", collectionLabel: "LE QUOTIDIEN, CHOISI AVEC SOIN",
   },
   ar: {
     brand: "CHICC", title: "التشكيلة", intro: "اكتشف مجموعة CHICC.", language: "اللغة", empty: "ستتوفر المنتجات قريباً.", setup: "يجب إعداد كتالوج Supabase قبل نشر المنتجات.",
-    categories: "الفئات", all: "عرض الكل", quantity: "الكمية", orderTitle: "طلبك", customerName: "الاسم الكامل", phone: "الهاتف", street: "العنوان", city: "المدينة", region: "المنطقة (اختياري)", postalCode: "الرمز البريدي (اختياري)", country: "الدولة (اختياري)", notes: "تعليمات التوصيل (اختياري)", placeOrder: "إرسال الطلب", submitting: "جارٍ الإرسال…", orderSuccess: "تم استلام طلبك. سيتواصل معك فريق CHICC لتأكيد التوصيل.", orderInvalid: "تحقق من بيانات الاتصال وعنوان التوصيل.", mixedCurrency: "اختر منتجات بعملة واحدة في كل طلب.", orderUnavailable: "ربما تغير المخزون. حدّث الكتالوج ثم حاول مجدداً.", chooseProduct: "اختر منتجاً واحداً على الأقل قبل الإرسال.", cart: "المنتجات المختارة", company: "الشركة", outOfStock: "نفد المخزون",
+    categories: "الفئات", all: "عرض الكل", quantity: "الكمية", orderTitle: "طلبك", customerName: "الاسم الكامل", phone: "الهاتف", street: "العنوان", city: "المدينة", region: "المنطقة (اختياري)", postalCode: "الرمز البريدي (اختياري)", country: "الدولة (اختياري)", notes: "تعليمات التوصيل (اختياري)", placeOrder: "إرسال الطلب", submitting: "جارٍ الإرسال…", orderSuccess: "تم استلام طلبك. سيتواصل معك فريق CHICC لتأكيد التوصيل.", orderInvalid: "تحقق من بيانات الاتصال وعنوان التوصيل.", mixedCurrency: "اختر منتجات بعملة واحدة في كل طلب.", orderUnavailable: "ربما تغير المخزون. حدّث الكتالوج ثم حاول مجدداً.", chooseProduct: "اختر منتجاً واحداً على الأقل قبل الإرسال.", cart: "المنتجات المختارة", company: "الشركة", outOfStock: "نفد المخزون", explore: "تصفح التشكيلة", collectionLabel: "اختيارات يومية بعناية",
   },
   en: {
     brand: "CHICC", title: "The collection", intro: "Discover the CHICC collection.", language: "Language", empty: "Products will be available soon.", setup: "Configure the Supabase catalog before publishing products.",
-    categories: "Categories", all: "View all", quantity: "Quantity", orderTitle: "Your order request", customerName: "Full name", phone: "Phone number", street: "Street address", city: "City", region: "Region (optional)", postalCode: "Postal code (optional)", country: "Country (optional)", notes: "Delivery instructions (optional)", placeOrder: "Send order request", submitting: "Sending…", orderSuccess: "Your request was received. The CHICC team will contact you to confirm delivery.", orderInvalid: "Check your contact details and delivery address.", mixedCurrency: "Choose items in one currency per order.", orderUnavailable: "Stock may have changed. Refresh the catalog and try again.", chooseProduct: "Choose at least one item before sending.", cart: "Selected items", company: "Company", outOfStock: "Out of stock",
+    categories: "Categories", all: "View all", quantity: "Quantity", orderTitle: "Your order request", customerName: "Full name", phone: "Phone number", street: "Street address", city: "City", region: "Region (optional)", postalCode: "Postal code (optional)", country: "Country (optional)", notes: "Delivery instructions (optional)", placeOrder: "Send order request", submitting: "Sending…", orderSuccess: "Your request was received. The CHICC team will contact you to confirm delivery.", orderInvalid: "Check your contact details and delivery address.", mixedCurrency: "Choose items in one currency per order.", orderUnavailable: "Stock may have changed. Refresh the catalog and try again.", chooseProduct: "Choose at least one item before sending.", cart: "Selected items", company: "Company", outOfStock: "Out of stock", explore: "Explore the collection", collectionLabel: "THOUGHTFULLY CHOSEN FOR EVERY DAY",
   },
 };
 
@@ -133,12 +134,21 @@ export function StorefrontCatalog({ products, categories, catalogReady }: { prod
         </label>
       </header>
       <section className="store-heading">
-        <span className="eyebrow">E-COMMERCE</span>
-        <h1>{text.title}</h1>
-        <p className="intro">{text.intro}</p>
+        <div className="store-heading-copy">
+          <span className="eyebrow">{text.collectionLabel}</span>
+          <h1>{text.title}</h1>
+          <p className="intro">{text.intro}</p>
+          <a className="store-cta" href="#collection">{text.explore}<span aria-hidden="true">↘</span></a>
+        </div>
+        <div className="store-hero-art" aria-hidden="true">
+          <span className="store-hero-orbit store-hero-orbit-one" />
+          <span className="store-hero-orbit store-hero-orbit-two" />
+          <span className="store-hero-monogram">C</span>
+          <span className="store-hero-caption">CHICC <span>·</span> 01</span>
+        </div>
       </section>
-      {!catalogReady ? <p className="catalog-empty">{text.setup}</p> : products.length === 0 ? <p className="catalog-empty">{text.empty}</p> : (
-        <>
+      {!catalogReady ? <p className="catalog-empty" id="collection">{text.setup}</p> : products.length === 0 ? <p className="catalog-empty" id="collection">{text.empty}</p> : (
+        <div className="collection-content" id="collection">
           {categories.length > 0 && <nav className="category-filters" aria-label={text.categories}>
             <button type="button" className={!categoryId ? "filter-chip is-selected" : "filter-chip"} onClick={() => setCategoryId(null)}>{text.all}</button>
             {categories.map((category) => <button type="button" key={category.id} className={categoryId === category.id ? "filter-chip is-selected" : "filter-chip"} onClick={() => setCategoryId(category.id)}>{localized(category.name_i18n, locale)}</button>)}
@@ -185,7 +195,7 @@ export function StorefrontCatalog({ products, categories, catalogReady }: { prod
             </section>
           )}
           {orderMessage && selectedProducts.length === 0 && <p className={orderMessage === "success" ? "success-message" : "form-message"} role={orderMessage === "success" ? "status" : "alert"}>{messageText}</p>}
-        </>
+        </div>
       )}
     </main>
   );
