@@ -16,7 +16,6 @@ type ItemRow = {
   id: string; order_id: string; product_name_i18n: LocalizedText; quantity: number;
   unit_price_minor: string | number; line_total_minor: string | number;
 };
-type ProductChoice = { id: string; name_i18n: LocalizedText; sku: string | null; currency_code: string; stock_quantity: number | string | null };
 type Worker = { id: string; display_name: string | null };
 
 type OrdersPageProps = { searchParams: Promise<{ notice?: string }> };
@@ -34,7 +33,6 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
     .limit(100);
 
   let itemRows: ItemRow[] = [];
-  let productChoices: ProductChoice[] = [];
   let workers: Worker[] = [];
   let relatedError = false;
   const orderRows = (ordersResult.data ?? []) as OrderRow[];
@@ -49,13 +47,14 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   }
 
   if (canManage) {
-    const [productsResult, workersResult] = await Promise.all([
-      supabase.from("products").select("id, name_i18n, sku, currency_code, stock_quantity").eq("is_published", true).order("slug"),
-      supabase.from("profiles").select("id, display_name").eq("role", "delivery_worker").eq("is_active", true).order("display_name"),
-    ]);
-    productChoices = (productsResult.data ?? []) as ProductChoice[];
+    const workersResult = await supabase
+      .from("profiles")
+      .select("id, display_name")
+      .eq("role", "delivery_worker")
+      .eq("is_active", true)
+      .order("display_name");
     workers = (workersResult.data ?? []) as Worker[];
-    relatedError ||= Boolean(productsResult.error || workersResult.error);
+    relatedError ||= Boolean(workersResult.error);
   }
 
   const itemsByOrder = new Map<string, ItemRow[]>();
@@ -70,7 +69,6 @@ export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   return (
     <OrdersBoard
       orders={orders}
-      products={productChoices}
       workers={workers}
       role={user.role as InternalAccountRole}
       loadError={loadError}
