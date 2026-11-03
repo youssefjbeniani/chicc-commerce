@@ -2,6 +2,7 @@
 
 import type { Locale } from "@chicc/types";
 import { useActionState, useEffect, useState } from "react";
+import { ChiccLogo } from "@chicc/ui";
 import { signIn, type LoginError } from "../actions";
 
 const copy: Record<Locale, {
@@ -50,7 +51,7 @@ export function LoginForm({ initialError }: { initialError: string | null }) {
   return (
     <main className="login-shell" lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <header className="login-topbar">
-        <span className="eyebrow">{text.brand}</span>
+        <div className="brand-lockup"><ChiccLogo className="brand-logo" /><span className="eyebrow">{text.brand}</span></div>
         <label className="language-picker">
           <span>{text.language}</span>
           <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>

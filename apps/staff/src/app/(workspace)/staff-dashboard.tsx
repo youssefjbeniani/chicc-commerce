@@ -3,6 +3,7 @@
 import type { InternalAccountRole, Locale } from "@chicc/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ChiccLogo } from "@chicc/ui";
 import { signOut } from "../actions";
 
 type Copy = {
@@ -51,7 +52,7 @@ export function StaffDashboard({ name, role }: { name: string; role: InternalAcc
   return (
     <main className="shell dashboard-shell" lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <header className="dashboard-topbar">
-        <span className="eyebrow">{text.brand}</span>
+        <div className="brand-lockup"><ChiccLogo className="brand-logo" /><span className="eyebrow">{text.brand}</span></div>
         <label className="language-picker">
           <span>{text.language}</span>
           <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>

@@ -2,6 +2,7 @@
 
 import type { Locale } from "@chicc/types";
 import Link from "next/link";
+import { ChiccLogo } from "@chicc/ui";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { provisionTeamMember, updateTeamMember, type ProvisionTeamState } from "./actions";
 
@@ -54,7 +55,7 @@ export function TeamManager({ members, loadError, notice }: { members: TeamAccou
   return (
     <main className="team-shell" lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <header className="dashboard-topbar">
-        <Link className="eyebrow catalog-brand" href="/">{text.brand}</Link>
+        <Link className="catalog-brand brand-lockup" href="/"><ChiccLogo className="brand-logo" /><span className="eyebrow">{text.brand}</span></Link>
         <div className="orders-header-tools">
           <Link className="secondary-button action-link" href="/">{text.back}</Link>
           <label className="language-picker"><span>{text.language}</span>

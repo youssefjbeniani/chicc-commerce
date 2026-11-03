@@ -233,7 +233,9 @@ h1 { margin: 15px 0 12px; font-size: clamp(2.75rem, 6vw, 5.7rem); font-weight: 5
 .intro, .starter-card p, .locale-note { color: var(--muted); line-height: 1.7; }
 .intro { max-width: 600px; margin: 16px 0 0; font-size: 1rem; }
 .dashboard-topbar, .login-topbar { min-height: 58px; border-bottom: 1px solid var(--line); }
-.dashboard-topbar > .eyebrow, .login-topbar > .eyebrow { color: var(--ink); font-size: 0.85rem; letter-spacing: 0.2em; }
+.brand-lockup { display: inline-flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; }
+.brand-logo { display: block; flex: 0 0 auto; width: 48px; height: 48px; }
+.dashboard-topbar .brand-lockup > .eyebrow, .login-topbar .brand-lockup > .eyebrow { color: var(--ink); font-size: 0.85rem; letter-spacing: 0.2em; }
 .language-picker { gap: 9px; color: var(--muted); font-size: 0.78rem; }
 .language-picker select { min-height: 40px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); padding: 0 14px; }
 
@@ -316,6 +318,8 @@ h1 { margin: 15px 0 12px; font-size: clamp(2.75rem, 6vw, 5.7rem); font-weight: 5
 }
 @media (max-width: 520px) {
   .dashboard-topbar, .login-topbar { gap: 12px; }
+  .brand-lockup { gap: 8px; }
+  .brand-logo { width: 40px; height: 40px; }
   .dashboard-heading h1, .login-card h1 { letter-spacing: -0.06em; }
   .dashboard-footer { align-items: flex-start; flex-direction: column; }
   .catalog-shell > h1, .orders-shell > h1, .team-shell > h1 { margin-top: 42px; }

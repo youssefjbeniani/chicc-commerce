@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChiccLogo } from "@chicc/ui";
 import { formatMinorAmount, type Locale, type LocalizedText } from "@chicc/types";
 import { type FormEvent, useActionState, useEffect, useState } from "react";
 import { createCategory, createProduct, deleteCategory, deleteProduct, updateCategory, updateProduct, type CatalogActionState } from "./actions";
@@ -127,7 +128,7 @@ export function CatalogManager({ categories, products, catalogReady, canDelete, 
   return (
     <main className="catalog-shell" lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <header className="dashboard-topbar">
-        <a className="eyebrow catalog-brand" href="/">CHICC · ÉQUIPE</a>
+        <a className="catalog-brand brand-lockup" href="/"><ChiccLogo className="brand-logo" /><span className="eyebrow">CHICC · ÉQUIPE</span></a>
         <label className="language-picker"><span>{text.language}</span>
           <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>
             <option value="fr">Français</option><option value="ar">العربية</option><option value="en">English</option>
