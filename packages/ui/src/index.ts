@@ -35,3 +35,30 @@ export function ChiccLogo({ className = "" }: { className?: string }): ReactNode
     h("text", { x: "160", y: "271", textAnchor: "middle", fill: "#403326", fontFamily: "Georgia, 'Times New Roman', serif", fontSize: "14", letterSpacing: "3.1" }, "The scent of the aura"),
   );
 }
+
+export type ChiccIconName = "arrow-up-right" | "arrow-right" | "arrow-left" | "check" | "sparkles" | "plus";
+
+const chiccIconPaths: Record<ChiccIconName, ReactNode> = {
+  "arrow-up-right": h("path", { d: "M7 17 17 7M8 7h9v9" }),
+  "arrow-right": h("path", { d: "M5 12h14m-7-7 7 7-7 7" }),
+  "arrow-left": h("path", { d: "M19 12H5m7 7-7-7 7-7" }),
+  check: h("path", { d: "m5 12 4 4L19 6" }),
+  sparkles: h("path", { d: "m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Zm7 12 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z" }),
+  plus: h("path", { d: "M12 5v14M5 12h14" }),
+};
+
+export function ChiccIcon({ name, size = 18, className = "" }: { name: ChiccIconName; size?: number; className?: string }): ReactNode {
+  return h("svg", {
+    className,
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true",
+    focusable: "false",
+  }, chiccIconPaths[name]);
+}
