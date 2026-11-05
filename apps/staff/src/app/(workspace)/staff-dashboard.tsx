@@ -3,7 +3,7 @@
 import type { InternalAccountRole, Locale } from "@chicc/types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChiccLogo } from "@chicc/ui";
+import { ChiccIcon, ChiccLogo } from "@chicc/ui";
 import { signOut } from "../actions";
 
 type Copy = {
@@ -80,15 +80,15 @@ export function StaffDashboard({ name, role }: { name: string; role: InternalAcc
         </div>
         <nav className="dashboard-actions">
           <Link className="workspace-card" href="/orders">
-            <span className="workspace-card-top"><span>01</span><span aria-hidden="true">↗</span></span>
+            <span className="workspace-card-top"><span>01</span><span aria-hidden="true"><ChiccIcon name="arrow-up-right" size={16} /></span></span>
             <h3>{text.orders}</h3><p>{text.ordersHint}</p>
           </Link>
           {role !== "delivery_worker" && <Link className="workspace-card" href="/catalog">
-            <span className="workspace-card-top"><span>02</span><span aria-hidden="true">↗</span></span>
+            <span className="workspace-card-top"><span>02</span><span aria-hidden="true"><ChiccIcon name="arrow-up-right" size={16} /></span></span>
             <h3>{text.catalog}</h3><p>{text.catalogHint}</p>
           </Link>}
           {role === "manager" && <Link className="workspace-card" href="/team">
-            <span className="workspace-card-top"><span>03</span><span aria-hidden="true">↗</span></span>
+            <span className="workspace-card-top"><span>03</span><span aria-hidden="true"><ChiccIcon name="arrow-up-right" size={16} /></span></span>
             <h3>{text.team}</h3><p>{text.teamHint}</p>
           </Link>}
         </nav>
