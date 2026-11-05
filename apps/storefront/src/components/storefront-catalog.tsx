@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type Locale, type LocalizedText, formatMinorAmount } from "@chicc/types";
+import { ChiccIcon } from "@chicc/ui";
 import { type FormEvent, useEffect, useState } from "react";
 import type { StoreCategory, StoreProduct } from "@/lib/storefront-data";
 import { createBrowserClient } from "@/lib/supabase/browser";
@@ -219,8 +220,8 @@ export function StoreHeader({ locale, onLocaleChange, labels }: {
       <details className="mobile-navigation">
         <summary aria-label={labels.menu}><span className="menu-open-label">{labels.menu}</span><span className="menu-close-label">{labels.close}</span><span className="menu-icon" aria-hidden="true"><i/><i/></span></summary>
         <nav className="mobile-menu-panel" aria-label={labels.menu}>
-          {links.map(([href, label]) => <Link key={href} href={href}>{label}<span aria-hidden="true">→</span></Link>)}
-          <Link href="/collection">{collectionLabel}<span aria-hidden="true">→</span></Link>
+          {links.map(([href, label]) => <Link key={href} href={href}>{label}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link>)}
+          <Link href="/collection">{collectionLabel}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link>
         </nav>
       </details>
     </header>
@@ -285,10 +286,10 @@ function ProductCard({ product, locale, text, chiccBottleImage, categoryLabel }:
       <h3><Link href={`/products/${encodeURIComponent(product.slug)}`}>{name}</Link></h3>
       {description && <p className="product-tagline">{description}</p>}
       <p className="delivery-note">{text.deliveryNote}</p>
-      {description && <details className="product-details"><summary>{text.details}<span aria-hidden="true">+</span></summary><p>{description}</p></details>}
+      {description && <details className="product-details"><summary>{text.details}<span aria-hidden="true"><ChiccIcon name="plus" size={16} /></span></summary><p>{description}</p></details>}
       <div className="product-card-bottom">
         <strong className="product-card-price">{formatMinorAmount(product.price_minor, product.currency_code, locale)}</strong>
-        <Link className="product-card-action" href={`/products/${encodeURIComponent(product.slug)}`} aria-label={`${name} — ${text.viewProduct}`}><span aria-hidden="true">→</span></Link>
+        <Link className="product-card-action" href={`/products/${encodeURIComponent(product.slug)}`} aria-label={`${name} — ${text.viewProduct}`}><span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link>
       </div>
     </div>
   </article>;
@@ -374,7 +375,7 @@ export function StorefrontCatalog({ products, categories, catalogReady, view = "
           <span className="eyebrow">{text.heroEyebrow}</span>
           <h1>{text.heroTitle}</h1>
           <p>{text.heroText}</p>
-          <Link className="banner-about-link" href="/about">{text.aboutLink}<span aria-hidden="true">↗</span></Link>
+          <Link className="banner-about-link" href="/about">{text.aboutLink}<span aria-hidden="true"><ChiccIcon name="arrow-up-right" /></span></Link>
         </div>
       </section>
 
@@ -391,14 +392,14 @@ export function StorefrontCatalog({ products, categories, catalogReady, view = "
           <span className="home-category-overlay"/>
           <span className="home-category-index">0{index + 1}</span>
           <span className="home-category-name">{category.label}</span>
-          <span className="home-category-arrow" aria-hidden="true">↗</span>
+          <span className="home-category-arrow" aria-hidden="true"><ChiccIcon name="arrow-up-right" /></span>
         </Link>)}</div>
       </section>
 
       <section className="featured-section" aria-labelledby="featured-title">
         <div className="section-heading"><span className="eyebrow">CHICC · 02</span><h2 id="featured-title">{text.featuredTitle}</h2></div>
         {!catalogReady ? <p className="catalog-empty">{text.setup}</p> : featuredProducts.length === 0 ? <p className="catalog-empty">{text.empty}</p> : <div className="product-grid featured-grid">{featuredProducts.map((product) => <ProductCard key={product.id} product={product} locale={locale} text={text} chiccBottleImage={chiccBottleForProduct(product, categories)} categoryLabel={categoryLabelForProduct(product, categories, locale)}/>)}</div>}
-        <div className="see-all-row"><Link className="store-cta" href="/collection">{text.seeAll}<span aria-hidden="true">→</span></Link></div>
+        <div className="see-all-row"><Link className="store-cta" href="/collection">{text.seeAll}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link></div>
       </section>
     </>}
 
@@ -436,7 +437,7 @@ export function StorefrontCatalog({ products, categories, catalogReady, view = "
         </div>}
 
         {packStep === "selection" && <div className="pack-picker">
-          <button className="pack-back-button" type="button" onClick={() => setPackStep("offers")}>← {text.packBack}</button>
+          <button className="pack-back-button" type="button" onClick={() => setPackStep("offers")}><ChiccIcon name={locale === "ar" ? "arrow-right" : "arrow-left"} /> {text.packBack}</button>
           <div className="pack-picker-heading"><div><span className="eyebrow">{packSize === 2 ? text.packDuo : text.packTrio}</span><h2>{text.packChoose}</h2><p aria-live="polite">{selectedPackIds.length} / {packSize} {text.packSelected}{selectedPackIds.length < packSize ? ` · ${packSize - selectedPackIds.length} ${text.packRemaining}` : ""}</p></div><span className="pack-total">{text.packTotal}<strong>{formatMinorAmount(packPriceMinor, packCurrency, locale)}</strong></span></div>
           <div className="pack-product-grid">{products.map((product) => {
             const selected = selectedPackIds.includes(product.id);
@@ -444,22 +445,22 @@ export function StorefrontCatalog({ products, categories, catalogReady, view = "
             return <button type="button" key={product.id} className={`pack-product${selected ? " is-selected" : ""}`} aria-pressed={selected} disabled={disabled} onClick={() => togglePackProduct(product)}>
               <span className="pack-product-image">{product.image_url ? <Image src={product.image_url} alt="" fill sizes="(max-width: 700px) 40vw, 160px" className="product-image"/> : <Image className="pack-placeholder-logo" src="/images/chicc-wordmark-light.png" alt="" width={99} height={51}/>}</span>
               <span className="pack-product-copy"><span>{formatProductName(localized(product.name_i18n, locale), locale)}</span><strong>{formatMinorAmount(product.price_minor, product.currency_code, locale)}</strong></span>
-              <span className="pack-product-check" aria-hidden="true">{selected ? "✓" : "+"}</span>
+              <span className="pack-product-check" aria-hidden="true"><ChiccIcon name={selected ? "check" : "plus"} /></span>
             </button>;
           })}</div>
           <div className={`pack-summary${selectedPackIds.length === packSize ? " is-complete" : ""}`} aria-live="polite">
             <div className="pack-summary-main">
-              <span className="pack-summary-label"><span className="pack-summary-mark" aria-hidden="true">{selectedPackIds.length === packSize ? "✓" : "✦"}</span><span className="eyebrow">{text.packTitle} · {selectedPackIds.length}/{packSize}</span></span>
+              <span className="pack-summary-label"><span className="pack-summary-mark" aria-hidden="true"><ChiccIcon name={selectedPackIds.length === packSize ? "check" : "sparkles"} /></span><span className="eyebrow">{text.packTitle} · {selectedPackIds.length}/{packSize}</span></span>
               <p>{selectedPackProducts.length ? selectedPackProducts.map((product) => formatProductName(localized(product.name_i18n, locale), locale)).join(" · ") : text.packChoose}</p>
               <span className="pack-progress" aria-hidden="true">{Array.from({ length: packSize }, (_, index) => <i className={index < selectedPackIds.length ? "is-filled" : ""} key={index}/>)}</span>
             </div>
             <div className="pack-summary-price"><span>{selectedPackIds.length === packSize ? text.packReady : `${packSize - selectedPackIds.length} ${text.packRemaining}`}</span><strong>{formatMinorAmount(packPriceMinor, packCurrency, locale)}</strong><small>{text.packFreeDelivery}</small></div>
-            <div className="pack-summary-action"><button className="pack-summary-button" type="button" disabled={selectedPackIds.length !== packSize} onClick={() => { setPackOrderError(false); setPackStep("checkout"); }}>{text.packToOrder}<span aria-hidden="true">→</span></button></div>
+            <div className="pack-summary-action"><button className="pack-summary-button" type="button" disabled={selectedPackIds.length !== packSize} onClick={() => { setPackOrderError(false); setPackStep("checkout"); }}>{text.packToOrder}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></button></div>
           </div>
         </div>}
 
         {packStep === "checkout" && <div className="pack-checkout">
-          <button className="pack-back-button" type="button" onClick={() => setPackStep("selection")}>← {text.packChoose}</button>
+          <button className="pack-back-button" type="button" onClick={() => setPackStep("selection")}><ChiccIcon name={locale === "ar" ? "arrow-right" : "arrow-left"} /> {text.packChoose}</button>
           <div className="pack-checkout-grid">
             <section className="pack-checkout-summary"><span className="eyebrow">{packSize === 2 ? text.packDuo : text.packTrio}</span><h2>{text.packTitle}</h2><ul>{selectedPackProducts.map((product) => <li key={product.id}>{formatProductName(localized(product.name_i18n, locale), locale)}</li>)}</ul><div className="pack-checkout-total"><span>{text.packTotal}</span><strong>{formatMinorAmount(packPriceMinor, packCurrency, locale)}</strong></div><small>{text.packFreeDelivery} · {text.packDelivery}</small></section>
             <section className="product-order-card pack-order-card"><h2>{text.packOrderTitle}</h2><p>{text.packOrderIntro}</p><form onSubmit={submitPackOrder} className="order-request-form pack-order-form">
@@ -474,13 +475,13 @@ export function StorefrontCatalog({ products, categories, catalogReady, view = "
           </div>
         </div>}
 
-        {packStep === "success" && <section className="pack-order-success" role="status"><span className="eyebrow">CHICC · {text.packTitle}</span><h2>{text.packSuccess}</h2><p>{selectedPackProducts.map((product) => formatProductName(localized(product.name_i18n, locale), locale)).join(" · ")}</p><strong>{formatMinorAmount(packPriceMinor, packCurrency, locale)}</strong><Link className="store-cta" href="/collection">{text.packContinue}<span aria-hidden="true">→</span></Link></section>}
+        {packStep === "success" && <section className="pack-order-success" role="status"><span className="eyebrow">CHICC · {text.packTitle}</span><h2>{text.packSuccess}</h2><p>{selectedPackProducts.map((product) => formatProductName(localized(product.name_i18n, locale), locale)).join(" · ")}</p><strong>{formatMinorAmount(packPriceMinor, packCurrency, locale)}</strong><Link className="store-cta" href="/collection">{text.packContinue}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link></section>}
       </> : <p className="catalog-empty">{text.empty}</p>}
     </section>}
 
     {view === "about" && <>
       <section className="about-page-hero">
-        <div className="about-page-copy"><span className="eyebrow">{text.aboutEyebrow}</span><h1>{text.aboutTitle}</h1><p>{text.aboutText}</p><Link className="store-cta" href="/collection">{text.collection}<span aria-hidden="true">→</span></Link></div>
+        <div className="about-page-copy"><span className="eyebrow">{text.aboutEyebrow}</span><h1>{text.aboutTitle}</h1><p>{text.aboutText}</p><Link className="store-cta" href="/collection">{text.collection}<span aria-hidden="true"><ChiccIcon name={locale === "ar" ? "arrow-left" : "arrow-right"} /></span></Link></div>
         <div className="about-page-image"><Image src="/images/chicc-about-silk.webp" alt="" fill priority sizes="(max-width: 760px) 100vw, 50vw"/></div>
       </section>
       <section className="about-story"><div><span className="eyebrow">CHICC · NOS VALEURS</span><h2>{text.aboutSecondTitle}</h2></div><p>{text.aboutSecondText}</p></section>
