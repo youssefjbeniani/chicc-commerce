@@ -1305,3 +1305,24 @@ h1, h2, h3, .store-wordmark, .home-category-name {
     padding: 20px;
   }
 }
+
+
+/* Supplied product card photos share one square canvas and render at equal size. */
+.product-image-frame-photo {
+  background: #000;
+}
+.product-image-frame-photo > .product-card-photo {
+  object-fit: contain;
+  object-position: center;
+  padding: 0;
+}
+.product-image-frame-photo .product-card-art-heading {
+  color: #f5e9dc;
+}
+.product-image-frame-photo .product-card-art-heading i {
+  background: #c69a5e;
+}
+.product-image-frame-photo > .product-tag {
+  color: #f5e9dc;
+  background: rgb(0 0 0 / 45%);
+}

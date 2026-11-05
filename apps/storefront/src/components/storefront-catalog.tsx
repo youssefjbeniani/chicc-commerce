@@ -263,16 +263,27 @@ function categoryLabelForProduct(product: StoreProduct, categories: StoreCategor
   return category ? localized(category.name_i18n, locale) : "CHICC";
 }
 
+const suppliedProductCardImages: Record<string, string> = {
+  "you-armani": "/images/product-cards/you-armani.jpg",
+  "boss-white": "/images/product-cards/boss-white.jpg",
+  "kayali-intense": "/images/product-cards/kayali-intense.jpg",
+  "kayali-marshmello": "/images/product-cards/kayali-marshmello.jpg",
+  "my-way": "/images/product-cards/my-way.jpg",
+  "black-opium": "/images/product-cards/black-opium.jpg",
+  "stronger-with-you-powerfully": "/images/product-cards/stronger-with-you-powerfully.jpg",
+};
+
 function ProductCard({ product, locale, text, chiccBottleImage, categoryLabel }: { product: StoreProduct; locale: Locale; text: Copy; chiccBottleImage: string | null; categoryLabel: string }) {
   const name = formatProductName(localized(product.name_i18n, locale), locale);
   const description = localized(product.description_i18n, locale);
+  const suppliedCardImage = suppliedProductCardImages[product.slug];
   const originalPerfumeImage = originalPerfumeForProduct(product) ?? product.image_url;
   return <article className="product-card">
     <Link className="product-image-link" href={`/products/${encodeURIComponent(product.slug)}`} aria-label={`${name} — ${text.viewProduct}`}>
-      <div className={`product-image-frame product-image-frame-pair${chiccBottleImage ? "" : " product-image-frame-single"}`}>
+      <div className={`product-image-frame${suppliedCardImage ? " product-image-frame-photo" : ` product-image-frame-pair${chiccBottleImage ? "" : " product-image-frame-single"}`}`}>
         <div className="product-card-art-heading"><span>CHICC / {categoryLabel}</span><i aria-hidden="true"/></div>
         <span className="product-tag">{product.is_in_stock ? text.inStock : text.outOfStock}</span>
-        {chiccBottleImage ? <>
+        {suppliedCardImage ? <Image src={suppliedCardImage} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" className="product-image product-card-photo"/> : chiccBottleImage ? <>
         <span className="product-image-half product-image-original">
           {originalPerfumeImage ? <Image src={originalPerfumeImage} alt="" fill sizes="(max-width: 700px) 25vw, (max-width: 980px) 16vw, 12vw" className="product-image original-perfume-image"/> : <span className="product-placeholder"><Image className="product-placeholder-logo" src="/images/chicc-wordmark-light.png" alt="" width={99} height={51}/></span>}
         </span>
