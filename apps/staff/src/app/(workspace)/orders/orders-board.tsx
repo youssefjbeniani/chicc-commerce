@@ -44,6 +44,11 @@ function localized(value: Partial<LocalizedText>, locale: Locale) {
   return value[locale] || value.fr || value.en || "";
 }
 
+function formatOrderDate(value: string) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : `${date.toISOString().replace("T", " ").slice(0, 19)} UTC`;
+}
+
 function formatTotal(amount: string | number, currency: string, locale: Locale) {
   const value = Number(amount);
   if (!Number.isSafeInteger(value)) return "";
@@ -95,7 +100,7 @@ export function OrdersBoard({
           return (
             <article className="order-card" key={order.id}>
               <header className="order-card-header">
-                <div><span className="eyebrow">{order.channel === "whatsapp" ? text.whatsapp : text.website}</span><small>{new Date(order.created_at).toLocaleString(locale)}</small></div>
+                <div><span className="eyebrow">{order.channel === "whatsapp" ? text.whatsapp : text.website}</span><small>{formatOrderDate(order.created_at)}</small></div>
                 <span className="status-pill">{text.statuses[order.status]}</span>
               </header>
               <div className="order-contact">
