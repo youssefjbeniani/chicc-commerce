@@ -13,7 +13,10 @@ function allowedOrigins(): Set<string> {
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean);
-  return new Set(configured);
+  const origins = new Set(configured);
+  // Keep the production storefront working even if the optional origin setting is stale.
+  origins.add("https://chicc-perfumes.netlify.app");
+  return origins;
 }
 
 function responseHeaders(origin: string): HeadersInit {
