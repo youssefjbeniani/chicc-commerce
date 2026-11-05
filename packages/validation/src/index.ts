@@ -67,6 +67,6 @@ export type StaffSignInInput = z.infer<typeof staffSignInSchema>;
 export const teamProvisionSchema = z.object({
   email: z.string().trim().email().max(254).transform((email) => email.toLowerCase()),
   displayName: z.string().trim().max(120).optional(),
-  role: z.enum(["staff", "delivery_worker"]),
+  role: z.enum(["staff", "delivery_worker", "manager"]),
 });
 export type TeamProvisionDraft = z.infer<typeof teamProvisionSchema>;

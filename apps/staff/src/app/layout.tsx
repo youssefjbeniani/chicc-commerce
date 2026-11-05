@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@chicc/ui/styles.css";
+import "./staff.css";
 
 export const metadata: Metadata = {
   title: "CHICC Staff",

@@ -1,6 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const localOrigins = new Set(["http://localhost:3000", "http://127.0.0.1:3000"]);
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 type JsonObject = Record<string, unknown>;
@@ -14,7 +13,7 @@ function allowedOrigins(): Set<string> {
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean);
-  return new Set([...localOrigins, ...configured]);
+  return new Set(configured);
 }
 
 function responseHeaders(origin: string): HeadersInit {
@@ -91,7 +90,16 @@ Deno.serve(async (request) => {
     return Response.json({ error: "Choose at least one product." }, { status: 400, headers });
   }
 
+  const packSize = body.pack_size === undefined ? null : body.pack_size;
+  if (packSize !== null && packSize !== 2 && packSize !== 3) {
+    return Response.json({ error: "Invalid pack selection." }, { status: 400, headers });
+  }
+  if (packSize !== null && body.items.length !== packSize) {
+    return Response.json({ error: "Choose the correct number of products for this pack." }, { status: 400, headers });
+  }
+
   const items: { product_id: string; quantity: number }[] = [];
+  const selectedProductIds = new Set<string>();
   for (const value of body.items) {
     if (!isObject(value) || typeof value.product_id !== "string" || !uuidPattern.test(value.product_id)) {
       return Response.json({ error: "Invalid product selection." }, { status: 400, headers });
@@ -100,6 +108,10 @@ Deno.serve(async (request) => {
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 25) {
       return Response.json({ error: "Invalid product quantity." }, { status: 400, headers });
     }
+    if (selectedProductIds.has(value.product_id) || (packSize !== null && quantity !== 1)) {
+      return Response.json({ error: "Invalid product selection." }, { status: 400, headers });
+    }
+    selectedProductIds.add(value.product_id);
     items.push({ product_id: value.product_id, quantity });
   }
 
@@ -119,12 +131,13 @@ Deno.serve(async (request) => {
   if (rateLimitError) return Response.json({ error: "Order service is temporarily unavailable." }, { status: 503, headers });
   if (!withinLimit) return Response.json({ error: "Please try again later." }, { status: 429, headers });
 
-  const { error: orderError } = await supabase.rpc("create_website_order", {
+  const { error: orderError } = await supabase.rpc(packSize === null ? "create_website_order" : "create_website_pack_order", {
     p_customer_name: customerName,
     p_customer_phone: customerPhone,
     p_delivery_address: body.delivery_address,
     p_delivery_notes: deliveryNotes || null,
     p_items: items,
+    ...(packSize === null ? {} : { p_pack_size: packSize }),
   });
   if (orderError) {
     return Response.json({ error: "We could not place this order. Check that every item is still available." }, { status: 400, headers });

@@ -69,7 +69,7 @@ For Deploy Previews and branch deploys, use a separate staging Supabase project 
 After the first production builds, copy the HTTPS origins Netlify assigned to each site (origin only, with no path).
 
 1. In Supabase **Authentication → URL Configuration**, set **Site URL** to the staff site's HTTPS origin. Add the exact staff site's production URL to the redirect allow list. Keep localhost entries only for local development. Test invitation and recovery links.
-2. In Supabase **Edge Functions → Secrets**, set `CHICC_SUPABASE_SECRET_KEY` to the server-only Supabase secret key. Set `CHICC_STOREFRONT_ORIGIN` to the storefront's exact HTTPS origin, for example `https://chicc-storefront.netlify.app`.
+2. In Supabase **Edge Functions → Secrets**, set `CHICC_SUPABASE_SECRET_KEY` to the server-only Supabase secret key. Set `CHICC_STOREFRONT_ORIGIN` to the exact comma-separated origins that may call the order function: the storefront HTTPS origin, the staff HTTPS origin if needed, and `http://localhost:3005` for local checkout testing. Do not add paths or wildcard origins.
 3. If using a separate staging project, deploy the function there too and set only staging origins/secrets in that project.
 4. Deploy `place-website-order` to the confirmed Supabase project from the repository root:
 

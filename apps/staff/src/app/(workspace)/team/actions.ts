@@ -40,7 +40,7 @@ export async function updateTeamMember(formData: FormData): Promise<void> {
   const role = String(formData.get("role") ?? "");
   const active = String(formData.get("active") ?? "");
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)
-      || !["staff", "delivery_worker"].includes(role)
+      || !["staff", "delivery_worker", "manager"].includes(role)
       || !["active", "inactive"].includes(active)) {
     redirect("/team?notice=failed");
   }
