@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatMinorAmount,type Locale,type LocalizedText } from "@chicc/types";
+import { ChiccIcon } from "@chicc/ui";
 import { formatProductName, StoreHeader, storeGovernorates, useStoreLocale } from "@/components/storefront-catalog";
 import { type FormEvent,useEffect,useState } from "react";
 import { createBrowserClient } from "@/lib/supabase/browser";
@@ -29,7 +30,7 @@ export function StorefrontProductPage({product}:{product:Product}){
  const total=Number(product.price_minor)*quantity;
  return <main className="store-shell" lang={locale} dir={locale==="ar"?"rtl":"ltr"}>
   <div id="top"><StoreHeader locale={locale} onLocaleChange={setLocale} labels={{brand:text.brand,language:text.language,categories:text.categories,all:text.back,announcement:text.orderIntro,menu:text.menu,close:text.close}}/></div>
-  <Link className="product-back-link" href="/">← {text.back}</Link>
+  <Link className="product-back-link" href="/"><ChiccIcon name={locale === "ar" ? "arrow-right" : "arrow-left"} /> {text.back}</Link>
   <section className="product-detail-grid"><div className="product-detail-image">{product.image_url?<Image src={product.image_url} alt={productName} fill priority sizes="(max-width: 800px) 100vw, 50vw" className="product-image"/>:<div className="product-placeholder" aria-hidden="true">CHICC</div>}</div>
    <div className="product-detail-copy"><span className="eyebrow">CHICC · {product.slug}</span><h1>{productName}</h1><strong className="product-detail-price">{formatMinorAmount(product.price_minor,product.currency_code,locale)}</strong>{product.description_i18n&&<p className="product-detail-description">{localized(product.description_i18n,locale)}</p>}
    {!product.is_in_stock?<p className="form-message" role="status">{text.unavailable}</p>:<section className="product-order-card" id="order"><h2>{text.orderTitle}</h2><p>{text.orderIntro}</p><form onSubmit={submitOrder} className="order-request-form">
